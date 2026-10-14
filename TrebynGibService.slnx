@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TrebynGibService/TrebynGibService.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TrebynGibService.Tests/TrebynGibService.Tests.csproj" />
+  </Folder>
+</Solution>
