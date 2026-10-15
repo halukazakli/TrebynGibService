@@ -90,12 +90,23 @@ to `https://<bridge-host>/api/gib` with Basic authentication using the client's
 
 ## Docker (Linux server)
 
+The image is published on Docker Hub as `ifsturkey/trebyn-gib-service`
+(tags `latest` and versions such as `1.0.0`). On the server only `compose.yaml`
+and a filled-in `.env` are needed:
+
 ```bash
 git clone https://github.com/halukazakli/TrebynGibService.git && cd TrebynGibService
 cp .env.example .env        # fill in token and clients; .env is not committed
-docker compose up -d --build
+docker compose pull && docker compose up -d     # IMAGE_TAG=1.0.0 in .env pins a version
 curl http://localhost:8080/health
 curl -u <client-id>:<secret> http://localhost:8080/health/gib
+```
+
+To build locally instead: `docker compose up -d --build`. Publishing a new version:
+
+```bash
+docker build -t ifsturkey/trebyn-gib-service:<version> -t ifsturkey/trebyn-gib-service:latest .
+docker push ifsturkey/trebyn-gib-service:<version> && docker push ifsturkey/trebyn-gib-service:latest
 ```
 
 The container listens on plain HTTP 8080 and runs as a non-root user. Put a

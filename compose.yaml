@@ -1,7 +1,7 @@
 services:
   trebyn-gib-service:
+    image: ifsturkey/trebyn-gib-service:${IMAGE_TAG:-latest}
     build: .
-    image: trebyn-gib-service:latest
     container_name: trebyn-gib-service
     restart: unless-stopped
     ports:
