@@ -176,6 +176,8 @@ public sealed class BridgeTests : IDisposable
         var response = await CreateClient(secret: null).GetAsync("/health/gib");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        var challenge = Assert.Single(response.Headers.WwwAuthenticate);
+        Assert.Equal("Basic", challenge.Scheme);
         Assert.Empty(gib.Requests);
     }
 

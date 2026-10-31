@@ -36,7 +36,7 @@ app.MapGet("/health/gib", async (
     var client = authenticator.Authenticate(http);
     if (client is null)
     {
-        return Results.Unauthorized();
+        return BasicChallenge(http);
     }
 
     var taxpayer = taxpayerId
@@ -69,7 +69,7 @@ app.MapPost("/api/gib", async (
     var client = authenticator.Authenticate(http);
     if (client is null)
     {
-        return Results.Unauthorized();
+        return BasicChallenge(http);
     }
 
     var options = bridgeOptions.CurrentValue;
@@ -114,5 +114,13 @@ app.MapPost("/api/gib", async (
 });
 
 app.Run();
+
+// The WWW-Authenticate header makes browsers show their login dialog, so the
+// endpoints can also be tried from a browser.
+static IResult BasicChallenge(HttpRequest http)
+{
+    http.HttpContext.Response.Headers.WWWAuthenticate = "Basic realm=\"TrebynGibService\", charset=\"UTF-8\"";
+    return Results.Unauthorized();
+}
 
 public partial class Program;

@@ -45,6 +45,9 @@ GIB must have authorized - and `gibStatus` / `gibAnswer` show what GIB said.
 curl -u ifs-dev:<secret> http://<host>:8080/health/gib
 ```
 
+Opening the same address in a browser works too: it asks for the client id and
+secret.
+
 ```json
 { "gibReachable": true, "gibStatus": 200, "elapsedMs": 412,
   "endpoint": "/kdv1/beyanname/versiyonlar", "gibAnswer": "{...}",
