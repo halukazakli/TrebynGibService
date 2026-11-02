@@ -112,10 +112,27 @@ docker build -t ifsturkey/trebyn-gib-service:<version> -t ifsturkey/trebyn-gib-s
 docker push ifsturkey/trebyn-gib-service:<version> && docker push ifsturkey/trebyn-gib-service:latest
 ```
 
-The container listens on plain HTTP 8080 and runs as a non-root user. Put a
-reverse proxy (nginx, Traefik...) with a TLS certificate in front of it - IFS
-Connect must call the bridge over HTTPS. The image has a Docker HEALTHCHECK on
-`/health`. Logs: `docker compose logs -f`.
+The container listens on plain HTTP 8080 and runs as a non-root user. The image
+has a Docker HEALTHCHECK on `/health`. Logs: `docker compose logs -f`.
+
+### HTTPS
+
+IFS Connect must call the bridge over HTTPS. `compose.tls.yaml` adds an nginx
+TLS proxy on port 443 (`nginx.conf`) and limits plain HTTP 8080 to the server
+itself:
+
+```bash
+mkdir certs
+cp <full-chain>.crt certs/tls.crt && cp <private-key>.key certs/tls.key   # PEM, key unencrypted
+chmod 750 certs && chmod 640 certs/tls.key
+echo 'COMPOSE_FILE=compose.yaml:compose.tls.yaml' >> .env
+docker compose up -d
+curl https://<bridge-host>/health
+```
+
+`tls.crt` must hold the whole chain as issued (leaf first): nginx sends it
+unchanged, which older Java trust stores need for cross-signed roots. To renew,
+replace the two files and run `docker compose restart tls-proxy`.
 
 ## Build and test
 
